@@ -5,6 +5,7 @@ namespace API_Painel_Investimentos.Interfaces
 {
     public interface IAutenticacaoService
     {
-        Task<ResultadoDto<ResponseTokenUsuarioDto>> GerarTokenUsuario(RequestTokenUsuarioDto entrada);
+        Task<ResultadoDto<ResponseTokenUsuarioDto>> GerarTokenUsuarioAsync(RequestTokenUsuarioDto entrada);
+        Task<ResultadoDto<ResponseUsuarioDto>> CriarUsuarioAsync(RequestUsuarioDto entrada, string roleCriador);
     }
 }

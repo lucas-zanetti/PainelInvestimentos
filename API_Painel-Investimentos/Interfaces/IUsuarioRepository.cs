@@ -5,6 +5,7 @@ namespace API_Painel_Investimentos.Interfaces
 {
     public interface IUsuarioRepository
     {
-        Task<ResultadoDto<int>> ObterUsuarioRolePorCredenciais(RequestTokenUsuarioDto credenciais);
+        Task<ResultadoDto<int>> ObterUsuarioRolePorCredenciaisAsync(RequestTokenUsuarioDto credenciais);
+        Task<ResultadoDto<ResponseUsuarioDto>> CriarUsuarioBancoAsync(RequestUsuarioDto entrada);
     }
 }

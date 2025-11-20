@@ -5,7 +5,11 @@ using API_Painel_Investimentos.Data.Migrations;
 using API_Painel_Investimentos.Data.Repositories;
 using API_Painel_Investimentos.Interfaces;
 using API_Painel_Investimentos.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace API_Painel_Investimentos;
 
@@ -29,9 +33,64 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(c =>
+
+        builder.Services.AddSwaggerGen(options =>
         {
-            c.EnableAnnotations();
+            options.EnableAnnotations();
+            
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "API Painel Investimentos",
+                Version = "v1",
+                Description = "API responsável pela simulação e controle de investimentos de clientes."
+            });
+
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Cabeçalho de autorização JWT usando o esquema Bearer."
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
+
+        var jwtConfig = builder.Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+        var key = Encoding.UTF8.GetBytes(jwtConfig!.Key);
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtConfig.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwtConfig.Audience,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateLifetime = true
+            };
         });
 
         var app = builder.Build();
@@ -44,6 +103,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

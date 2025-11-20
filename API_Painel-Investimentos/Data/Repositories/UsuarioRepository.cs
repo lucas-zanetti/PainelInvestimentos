@@ -12,8 +12,40 @@ namespace API_Painel_Investimentos.Data.Repositories
     public class UsuarioRepository(DbUsuarioContext context) : IUsuarioRepository
     {
         private readonly DbUsuarioContext _context = context;
+        private readonly PasswordHasher<UsuarioEntity> _hasher = new();
 
-        public async Task<ResultadoDto<int>> ObterUsuarioRolePorCredenciais(RequestTokenUsuarioDto credenciais)
+        public async Task<ResultadoDto<ResponseUsuarioDto>> CriarUsuarioBancoAsync(RequestUsuarioDto entrada)
+        {
+            var usuario = await _context.Users
+                .SingleOrDefaultAsync(u => u.UserName == entrada.Usuario);
+
+            if(usuario is not null)
+                return ResultadoDto<ResponseUsuarioDto>.Falha(new ErroDto
+                {
+                    Codigo = ErrorCodes.UsuarioExistente,
+                    Mensagem = "Já existe um usuário com este nome."
+                });
+
+            var usuarioEntity = new UsuarioEntity
+            {
+                UserName = entrada.Usuario,
+                Role = (int)Enum.Parse<UsuarioRoleEnum>(entrada.Role)
+            };
+
+            usuarioEntity.PasswordHash = _hasher.HashPassword(usuarioEntity, entrada.Senha);
+
+            _context.Users.Add(usuarioEntity);
+
+            await _context.SaveChangesAsync();
+
+            return ResultadoDto<ResponseUsuarioDto>.Ok(new ResponseUsuarioDto
+            {
+                Usuario = entrada.Usuario,
+                Role = entrada.Role
+            });
+        }
+
+        public async Task<ResultadoDto<int>> ObterUsuarioRolePorCredenciaisAsync(RequestTokenUsuarioDto credenciais)
         {
             var usuario = await _context.Users
                 .SingleOrDefaultAsync(u => u.UserName == credenciais.Usuario);
@@ -25,8 +57,7 @@ namespace API_Painel_Investimentos.Data.Repositories
                     Mensagem = "Credenciais Inválidas."
                 });
 
-            var hasher = new PasswordHasher<UsuarioEntity>();
-            var verification = hasher.VerifyHashedPassword(usuario, usuario.PasswordHash!, credenciais.Senha);
+            var verification = _hasher.VerifyHashedPassword(usuario, usuario.PasswordHash!, credenciais.Senha);
 
             if (verification == PasswordVerificationResult.Success || verification == PasswordVerificationResult.SuccessRehashNeeded)
                 return ResultadoDto<int>.Ok(usuario.Role);

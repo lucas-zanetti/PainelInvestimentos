@@ -47,8 +47,8 @@ namespace API_Painel_Investimentos.Services
             {
                 return ResultadoDto<string>.Falha(new ErroDto
                 {
-                    Codigo = ErrorCodes.RoleInvalida,
-                    Mensagem = "Role inválida."
+                    Codigo = ErrorCodes.RoleInexistente,
+                    Mensagem = "Role inexistente."
                 });
             }
 
