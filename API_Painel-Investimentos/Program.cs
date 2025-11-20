@@ -1,4 +1,12 @@
 
+using API_Painel_Investimentos.Configuration;
+using API_Painel_Investimentos.Data.Contexts;
+using API_Painel_Investimentos.Data.Migrations;
+using API_Painel_Investimentos.Data.Repositories;
+using API_Painel_Investimentos.Interfaces;
+using API_Painel_Investimentos.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace API_Painel_Investimentos;
 
 public class Program
@@ -7,26 +15,36 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("JwtConfiguration"));
+
+        builder.Services.AddDbContext<DbUsuarioContext>(options =>
+        {
+            options.UseSqlite(builder.Configuration.GetConnectionString("DbUsuarioConnectionString"));
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
+        builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IAutenticacaoService, AutenticacaoService>();
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.EnableAnnotations();
+        });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        app.MigrateDatabases<DbUsuarioContext>();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
 
         app.MapControllers();
 
