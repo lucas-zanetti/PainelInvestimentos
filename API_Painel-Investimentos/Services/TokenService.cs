@@ -47,7 +47,7 @@ namespace API_Painel_Investimentos.Services
             {
                 return ResultadoDto<string>.Falha(new ErroDto
                 {
-                    Codigo = "TKN-SERV-ROLE-INV",
+                    Codigo = ErrorCodes.RoleInvalida,
                     Mensagem = "Role inválida."
                 });
             }

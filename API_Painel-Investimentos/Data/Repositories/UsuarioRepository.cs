@@ -2,6 +2,7 @@
 using API_Painel_Investimentos.Data.Entities;
 using API_Painel_Investimentos.Dto.Autenticacao;
 using API_Painel_Investimentos.Dto.Infra;
+using API_Painel_Investimentos.Enums;
 using API_Painel_Investimentos.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace API_Painel_Investimentos.Data.Repositories
             if (usuario is null)
                 return ResultadoDto<int>.Falha(new ErroDto
                 {
-                    Codigo = "USR-CRED-INV",
+                    Codigo = ErrorCodes.CredenciaisInvalidas,
                     Mensagem = "Credenciais Inválidas."
                 });
 
@@ -32,7 +33,7 @@ namespace API_Painel_Investimentos.Data.Repositories
 
             return ResultadoDto<int>.Falha(new ErroDto
             {
-                Codigo = "USR-CRED-INV",
+                Codigo = ErrorCodes.CredenciaisInvalidas,
                 Mensagem = "Credenciais Inválidas."
             });
         }
