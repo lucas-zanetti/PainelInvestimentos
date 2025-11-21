@@ -1,6 +1,7 @@
 ﻿using API_Painel_Investimentos.Dto.Infra;
 using API_Painel_Investimentos.Dto.SimulacaoInvestimento;
 using API_Painel_Investimentos.Enums;
+using API_Painel_Investimentos.Filters;
 using API_Painel_Investimentos.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,8 @@ namespace API_Painel_Investimentos.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]/")]
+    [ServiceFilter(typeof(TelemetriaActionFilter))]
+    [ServiceFilter(typeof(SchemaValidationFilter))]
     public class PainelInvestimentoController(IPainelInvestimentoService simulacaoService) : ControllerBase
     {
         private readonly IPainelInvestimentoService _simulacaoService = simulacaoService;

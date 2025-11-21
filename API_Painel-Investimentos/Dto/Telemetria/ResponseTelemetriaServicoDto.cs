@@ -7,5 +7,8 @@ namespace API_Painel_Investimentos.Dto.Telemetria
     {
         [SwaggerParameter(Description = "Lista de métricas por serviço (nome, quantidade de chamadas e tempo médio de resposta).")]
         public required List<TelemetriaServicoDto> Servicos { get; set; }
+
+        [SwaggerParameter(Description = "Período dos dados de telemetria.")]
+        public required PeriodoDto Periodo { get; set; }
     }
 }

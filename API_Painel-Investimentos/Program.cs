@@ -3,6 +3,7 @@ using API_Painel_Investimentos.Configuration;
 using API_Painel_Investimentos.Data.Contexts;
 using API_Painel_Investimentos.Data.Migrations;
 using API_Painel_Investimentos.Data.Repositories;
+using API_Painel_Investimentos.Filters;
 using API_Painel_Investimentos.Interfaces;
 using API_Painel_Investimentos.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,9 @@ public class Program
 
         builder.Services.Configure<JwtConfiguration>(builder.Configuration.GetSection("JwtConfiguration"));
 
+        builder.Services.AddDbContext<DbTelemetriaContext>(
+            options => options.UseSqlite(builder.Configuration.GetConnectionString("DbTelemetriaConnectionString")));
+            
         builder.Services.AddDbContext<DbUsuarioContext>(options =>
         {
             options.UseSqlite(builder.Configuration.GetConnectionString("DbUsuarioConnectionString"));
@@ -32,13 +36,24 @@ public class Program
             options.UseSqlite(builder.Configuration.GetConnectionString("DbPainelInvestimentoConnectionString"));
         });
 
+        builder.Services.AddScoped<ITelemetriaRepository, TelemetriaRepository>();
+        builder.Services.AddScoped<TelemetriaActionFilter>();
+        builder.Services.AddScoped<ITelemetriaService, TelemetriaService>();
         builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAutenticacaoService, AutenticacaoService>();
         builder.Services.AddScoped<IPainelInvestimentoRepository, PainelInvestimentoRepository>();
         builder.Services.AddScoped<IPainelInvestimentoService, PainelInvestimentoService>();
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add(new CustomExceptionFilter());
+        }).ConfigureApiBehaviorOptions(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
+
+        builder.Services.AddScoped<SchemaValidationFilter>();
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -103,8 +118,8 @@ public class Program
 
         var app = builder.Build();
 
+        app.MigrateAndSeed<DbTelemetriaContext>();
         app.MigrateAndSeed<DbUsuarioContext>(DbInitializer.SeedUsuarioContext);
-
         app.MigrateAndSeed<DbPainelInvestimentoContext>(DbInitializer.SeedPainelInvestimentoContext);
 
         if (app.Environment.IsDevelopment())

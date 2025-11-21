@@ -17,5 +17,11 @@
         public const string SimulacaoInexistente = "PNL-SIML-INEX";
         public const string InvestimentoInexistente = "PNL-INVST-INEX";
         #endregion
+
+        #region Filter Errors
+        public const string FalhaSchemaController = "FLT-SCHEMA-CTRL";
+        public const string TelemetriaSemDados = "TLMT-SEM-DADOS";
+        public const string ErroInterno = "FLT-ERRO-INT";
+        #endregion
     }
 }
