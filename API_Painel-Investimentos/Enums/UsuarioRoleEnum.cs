@@ -4,7 +4,6 @@
     {
         Admin = 0,
         ColaboradorTI = 1,
-        ColaboradorBanco = 2,
-        Cliente = 3
+        ColaboradorComercial = 2
     }
 }

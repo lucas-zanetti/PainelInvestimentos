@@ -8,5 +8,14 @@
         public const string RoleInexistente = "USR-ROLE-INEX";
         public const string UsuarioExistente = "USR-EXIST";
         #endregion
+
+        #region PainelInvestimento Errors
+        public const string ClienteInexistente = "PNL-CLNT-INEX";
+        public const string ProdutoInexistente = "PNL-PRDT-INEX";
+        public const string PerfilRiscoInexistente = "PNL-PRFL-INEX";
+        public const string ProdutoCompativelInexistente = "PNL-PRDT-COMP-INEX";
+        public const string SimulacaoInexistente = "PNL-SIML-INEX";
+        public const string InvestimentoInexistente = "PNL-INVST-INEX";
+        #endregion
     }
 }

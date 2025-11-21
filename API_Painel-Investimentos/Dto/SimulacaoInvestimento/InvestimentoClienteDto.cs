@@ -6,7 +6,7 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
     public record InvestimentoClienteDto
     {
         [SwaggerParameter(Description = "Identificador único do investimento do cliente.")]
-        public int Id { get; set; }
+        public ulong Id { get; set; }
 
         [SwaggerParameter(Description = "Tipo do investimento (ex.: 'CDB', 'LCI', 'Fundo', etc.).")]
         public required string Tipo { get; set; }

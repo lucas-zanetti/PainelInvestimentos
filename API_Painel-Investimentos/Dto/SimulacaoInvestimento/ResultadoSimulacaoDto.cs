@@ -12,6 +12,6 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
         public double RentabilidadeEfetiva { get; set; }
 
         [SwaggerParameter(Description = "Prazo da aplicação considerado na simulação, em meses.")]
-        public short PrazoMeses { get; set; }
+        public ushort PrazoMeses { get; set; }
     }
 }

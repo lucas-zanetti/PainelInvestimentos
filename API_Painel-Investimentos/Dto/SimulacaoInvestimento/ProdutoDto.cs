@@ -6,7 +6,7 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
     public record ProdutoDto
     {
         [SwaggerParameter(Description = "Identificador único do produto.")]
-        public int Id { get; set; }
+        public uint Id { get; set; }
 
         [SwaggerParameter(Description = "Nome do produto financeiro.")]
         public required string Nome { get; set; }
@@ -19,5 +19,8 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
 
         [SwaggerParameter(Description = "Nível de risco associado ao produto (ex.: 'Baixo', 'Médio', 'Alto').")]
         public required string Risco { get; set; }
+
+        [SwaggerParameter(Description = "Prazo mínimo de resgate do produto, em mêses.")]
+        public ushort PrazoMinimoResgateMeses { get; set; }
     }
 }

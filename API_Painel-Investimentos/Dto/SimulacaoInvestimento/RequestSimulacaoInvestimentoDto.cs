@@ -6,13 +6,13 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
     public record RequestSimulacaoInvestimentoDto
     {
         [SwaggerParameter(Description = "Identificador do cliente para quem a simulação será realizada.")]
-        public int ClienteId { get; set; }
+        public uint ClienteId { get; set; }
 
         [SwaggerParameter(Description = "Valor do investimento a ser simulado, em reais.")]
         public double Valor { get; set; }
 
         [SwaggerParameter(Description = "Prazo da aplicação em meses.")]
-        public short PrazoMeses { get; set; }
+        public ushort PrazoMeses { get; set; }
 
         [SwaggerParameter(Description = "Tipo de produto financeiro (ex.: 'CDB', 'LCI', 'TesouroDireto').")]
         public required string TipoProduto { get; set; }

@@ -26,9 +26,17 @@ public class Program
             options.UseSqlite(builder.Configuration.GetConnectionString("DbUsuarioConnectionString"));
             options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
+
+        builder.Services.AddDbContext<DbPainelInvestimentoContext>(options =>
+        {
+            options.UseSqlite(builder.Configuration.GetConnectionString("DbPainelInvestimentoConnectionString"));
+        });
+
         builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddScoped<IAutenticacaoService, AutenticacaoService>();
+        builder.Services.AddScoped<IPainelInvestimentoRepository, PainelInvestimentoRepository>();
+        builder.Services.AddScoped<IPainelInvestimentoService, PainelInvestimentoService>();
 
         builder.Services.AddControllers();
 
@@ -96,6 +104,7 @@ public class Program
         var app = builder.Build();
 
         app.MigrateDatabases<DbUsuarioContext>();
+        app.MigrateDatabases<DbPainelInvestimentoContext>();
 
         if (app.Environment.IsDevelopment())
         {

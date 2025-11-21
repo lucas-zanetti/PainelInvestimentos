@@ -6,10 +6,10 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
     public record SimulacaoInvestimentoDto
     {
         [SwaggerParameter(Description = "Identificador único da simulação.")]
-        public int Id { get; set; }
+        public ulong Id { get; set; }
 
         [SwaggerParameter(Description = "Identificador do cliente ao qual a simulação pertence.")]
-        public int ClienteId { get; set; }
+        public uint ClienteId { get; set; }
 
         [SwaggerParameter(Description = "Nome do produto financeiro simulado.")]
         public required string Produto { get; set; }
@@ -19,6 +19,9 @@ namespace API_Painel_Investimentos.Dto.SimulacaoInvestimento
 
         [SwaggerParameter(Description = "Valor final estimado pela simulação.")]
         public double ValorFinal { get; set; }
+
+        [SwaggerParameter(Description = "Prazo da simulação em mêses.")]
+        public ushort PrazoMeses { get; set; }
 
         [SwaggerParameter(Description = "Data e hora em que a simulação foi realizada.")]
         public DateTime DataSimulacao { get; set; }
