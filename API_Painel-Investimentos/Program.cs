@@ -50,7 +50,7 @@ public class Program
             {
                 Title = "API Painel Investimentos",
                 Version = "v1",
-                Description = "API respons·vel pela simulaÁ„o e controle de investimentos de clientes."
+                Description = "API respons√°vel pela simula√ß√£o e controle de investimentos de clientes."
             });
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -60,7 +60,7 @@ public class Program
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Description = "CabeÁalho de autorizaÁ„o JWT usando o esquema Bearer."
+                Description = "Cabe√ßalho de autoriza√ß√£o JWT usando o esquema Bearer."
             });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
