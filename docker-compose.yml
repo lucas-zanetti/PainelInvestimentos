@@ -1,5 +1,5 @@
 services:
-  api_simulador:
+  api_painel-investimentos:
     image: ${DOCKER_REGISTRY-}api-painel-investimentos
     build:
       context: API_Painel-Investimentos
