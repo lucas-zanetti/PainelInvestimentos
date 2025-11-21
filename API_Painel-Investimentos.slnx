@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="API_Painel-Investimentos.Test/API_Painel-Investimentos.Test.csproj" Id="bed39e54-b774-4f5f-8916-deae786aa7e4">
+    <BuildDependency Project="API_Painel-Investimentos/API_Painel-Investimentos.csproj" />
+  </Project>
   <Project Path="API_Painel-Investimentos/API_Painel-Investimentos.csproj" />
 </Solution>
