@@ -66,7 +66,7 @@ namespace API_Painel_Investimentos.Services
                 DataSimulacao = DateTime.UtcNow
             };
 
-            await _painelInvestimentoRepository.GravarSimulacaoInvestimento(cliente, simulacao);
+            await _painelInvestimentoRepository.GravarSimulacaoInvestimento(cliente.Id, produto.Id, entrada.Valor, simulacao);
 
             return ResultadoDto<ResponseSimulacaoInvestimentoDto>.Ok(simulacao);
         }

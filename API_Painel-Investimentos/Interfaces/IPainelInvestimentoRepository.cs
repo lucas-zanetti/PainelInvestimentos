@@ -9,7 +9,7 @@ namespace API_Painel_Investimentos.Interfaces
         Task CriarCliente(ClienteDto cliente);
         Task<ResultadoDto<List<ProdutoDto>>> ObterProdutosPorTipoAsync(string tipoProduto);
         Task<ResultadoDto<List<ProdutoDto>>> ObterProdutosPorRiscoAsync(string riscoProduto);
-        Task GravarSimulacaoInvestimento(ClienteDto cliente, ResponseSimulacaoInvestimentoDto simulacao);
+        Task GravarSimulacaoInvestimento(uint clientId, uint produtoId, double valorInvestido, ResponseSimulacaoInvestimentoDto simulacao);
         Task<ResultadoDto<PerfilRiscoDto>> ObterDetalhesPerfilRiscoAsync(string nomePerfil);
         Task<ResultadoDto<List<SimulacaoInvestimentoDto>>> ObterTodasSimulacoesInvestimentoAsync();
         Task<ResultadoDto<List<SimulacaoInvestimentoProdutoDiaDto>>> ObterSimulacoesPorProdutoPorDiaAsync();

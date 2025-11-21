@@ -12,6 +12,6 @@ namespace API_Painel_Investimentos.Data.Entities
         [Required]
         public ushort Pontuacao { get; set; }
 
-        public required List<InvestimentoEntity> Investimentos { get; set; }
+        public required List<SimulacaoEntity> Investimentos { get; set; }
     }
 }

@@ -24,26 +24,23 @@ namespace API_Painel_Investimentos.Data.Repositories
             return _context.SaveChangesAsync();
         }
 
-        public async Task GravarSimulacaoInvestimento(ClienteDto cliente, ResponseSimulacaoInvestimentoDto simulacao)
+        public async Task GravarSimulacaoInvestimento(uint clienteId, uint produtoId, double valorInvestido, ResponseSimulacaoInvestimentoDto simulacao)
         {
-            var clienteEntity = _context.Clientes.Include(c => c.Investimentos).FirstOrDefault(c => c.Id == cliente.Id);
-            if (clienteEntity != null)
+            var simulacaoEntity = new SimulacaoEntity
             {
-                var produtoEntity = _context.Produtos.FirstOrDefault(p => p.Id == simulacao.ProdutoValidado!.Id);
-                if (produtoEntity != null)
-                {
-                    var simulacaoEntity = new SimulacaoEntity
-                    {
-                        ClienteId = clienteEntity.Id,
-                        Cliente = clienteEntity,
-                        ProdutoId = produtoEntity.Id,
-                        Produto = produtoEntity,
-                        ValorInvestido = simulacao.ResultadoSimulacao!.ValorFinal,
-                        DataSimulacao = simulacao.DataSimulacao
-                    };
-                    _context.Simulacoes.Add(simulacaoEntity);
-                }
-            }
+                ClienteId = clienteId,
+                Cliente = null!,
+                ProdutoId = produtoId,
+                Produto = null!,
+                ValorInvestido = valorInvestido,
+                PrazoMeses = simulacao.ResultadoSimulacao.PrazoMeses,
+                ValorFinal = simulacao.ResultadoSimulacao.ValorFinal,
+                Rentabilidade = simulacao.ResultadoSimulacao.RentabilidadeEfetiva,
+                DataSimulacao = simulacao.DataSimulacao
+            };
+
+            _context.Simulacoes.Add(simulacaoEntity);
+
             await _context.SaveChangesAsync();
         }
 
@@ -81,15 +78,16 @@ namespace API_Painel_Investimentos.Data.Repositories
 
         public async Task<ResultadoDto<List<InvestimentoClienteDto>>> ObterHistoricoInvestimentosClienteAsync(uint clienteId)
         {
-            var investimentos = await _context.Investimentos
+            var investimentos = await _context.Simulacoes
+                .Include(s => s.Produto)
                 .Where(i => i.ClienteId == clienteId)
                 .Select(i => new InvestimentoClienteDto
                 {
                     Id = i.Id,
-                    Tipo = i.Tipo,
-                    Valor = i.Valor,
+                    Tipo = i.Produto.Tipo,
+                    Valor = i.ValorInvestido,
                     Rentabilidade = i.Rentabilidade,
-                    Data = i.Data
+                    Data = DateOnly.FromDateTime(i.DataSimulacao)
                 }).ToListAsync();
 
             if (investimentos.Count == 0)

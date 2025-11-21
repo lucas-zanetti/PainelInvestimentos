@@ -4,7 +4,10 @@ namespace API_Painel_Investimentos.Data.Migrations
 {
     public static class MigrationExtensions
     {
-        public static IHost MigrateDatabases<TContext>(this IHost host) where TContext : DbContext
+        public static IHost MigrateAndSeed<TContext>(
+            this IHost host,
+            Action<TContext, IServiceProvider>? seedAction = null)
+            where TContext : DbContext
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -12,11 +15,14 @@ namespace API_Painel_Investimentos.Data.Migrations
                 try
                 {
                     var dbContext = services.GetRequiredService<TContext>();
+
                     dbContext.Database.Migrate();
+
+                    seedAction?.Invoke(dbContext, services);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Ocorreu um erro ao migrar o banco de dados: " + ex.Message);
+                    Console.WriteLine($"Ocorreu um erro ao migrar e/ou popular o banco de dados {typeof(TContext).Name}: {ex.Message}");
                 }
             }
             return host;

@@ -3,6 +3,7 @@ using System;
 using API_Painel_Investimentos.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_Painel_Investimentos.Data.Migrations
 {
     [DbContext(typeof(DbPainelInvestimentoContext))]
-    partial class DbPainelInvestimentoContextModelSnapshot : ModelSnapshot
+    [Migration("20251121005807_CorrigindoAnottationsBancoNegocial")]
+    partial class CorrigindoAnottationsBancoNegocial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.22");
@@ -28,6 +31,35 @@ namespace API_Painel_Investimentos.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("API_Painel_Investimentos.Data.Entities.InvestimentoEntity", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("ClienteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly>("Data")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Rentabilidade")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Valor")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("Investimentos");
                 });
 
             modelBuilder.Entity("API_Painel_Investimentos.Data.Entities.PerfilRiscoEntity", b =>
@@ -89,9 +121,6 @@ namespace API_Painel_Investimentos.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint?>("ClienteEntityId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<uint>("ClienteId")
                         .HasColumnType("INTEGER");
 
@@ -104,9 +133,6 @@ namespace API_Painel_Investimentos.Data.Migrations
                     b.Property<uint>("ProdutoId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Rentabilidade")
-                        .HasColumnType("REAL");
-
                     b.Property<double>("ValorFinal")
                         .HasColumnType("REAL");
 
@@ -115,13 +141,22 @@ namespace API_Painel_Investimentos.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteEntityId");
-
                     b.HasIndex("ClienteId");
 
                     b.HasIndex("ProdutoId");
 
                     b.ToTable("Simulacoes");
+                });
+
+            modelBuilder.Entity("API_Painel_Investimentos.Data.Entities.InvestimentoEntity", b =>
+                {
+                    b.HasOne("API_Painel_Investimentos.Data.Entities.ClienteEntity", "Cliente")
+                        .WithMany("Investimentos")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("API_Painel_Investimentos.Data.Entities.ProdutoEntity", b =>
@@ -137,10 +172,6 @@ namespace API_Painel_Investimentos.Data.Migrations
 
             modelBuilder.Entity("API_Painel_Investimentos.Data.Entities.SimulacaoEntity", b =>
                 {
-                    b.HasOne("API_Painel_Investimentos.Data.Entities.ClienteEntity", null)
-                        .WithMany("Investimentos")
-                        .HasForeignKey("ClienteEntityId");
-
                     b.HasOne("API_Painel_Investimentos.Data.Entities.ClienteEntity", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId")

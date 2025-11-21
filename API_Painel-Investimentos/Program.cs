@@ -103,8 +103,9 @@ public class Program
 
         var app = builder.Build();
 
-        app.MigrateDatabases<DbUsuarioContext>();
-        app.MigrateDatabases<DbPainelInvestimentoContext>();
+        app.MigrateAndSeed<DbUsuarioContext>(DbInitializer.SeedUsuarioContext);
+
+        app.MigrateAndSeed<DbPainelInvestimentoContext>(DbInitializer.SeedPainelInvestimentoContext);
 
         if (app.Environment.IsDevelopment())
         {

@@ -12,7 +12,6 @@ namespace API_Painel_Investimentos.Data.Entities
         [Required]
         public ushort PerfilRiscoId { get; set; }
 
-        [Required]
         [ForeignKey(nameof(PerfilRiscoId))]
         public required PerfilRiscoEntity PerfilRisco { get; set; }
 

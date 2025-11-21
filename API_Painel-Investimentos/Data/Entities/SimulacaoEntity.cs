@@ -12,14 +12,12 @@ namespace API_Painel_Investimentos.Data.Entities
         [Required]
         public uint ClienteId { get; set; }
 
-        [Required]
         [ForeignKey(nameof(ClienteId))]
         public required ClienteEntity Cliente { get; set; }
 
         [Required]
         public uint ProdutoId { get; set; }
 
-        [Required]
         [ForeignKey(nameof(ProdutoId))]
         public required ProdutoEntity Produto { get; set; }
 
@@ -28,6 +26,9 @@ namespace API_Painel_Investimentos.Data.Entities
 
         [Required]
         public double ValorFinal { get; set; }
+
+        [Required]
+        public double Rentabilidade { get; set; }
 
         [Required]
         public ushort PrazoMeses { get; set; }
